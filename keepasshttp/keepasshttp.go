@@ -1,4 +1,4 @@
-// Package keepasshttp provide tools to see and manipulate KeePass credentials through keePassHTTP plugin.
+// Package keepasshttp provide tools to see and manipulate KeePass credentials through KeePassHTTP plugin.
 package keepasshttp
 
 import (
@@ -34,7 +34,7 @@ type Credential struct {
 func (credential *Credential) Commit() error {
 	if credential.kph == nil {
 		return fmt.Errorf(
-			"credential is not bound to a keePassHTTP instance, use `kph.update(credential)` instead")
+			"credential is not bound to a KeePassHTTP instance, use `kph.update(credential)` instead")
 	}
 	return credential.kph.Update(credential)
 }
@@ -47,9 +47,9 @@ type Filter struct {
 	Realm     string
 }
 
-// KeePassHTTP is a class to manipulate KeePass credentials using keePassHTTP protocol.
+// KeePassHTTP is a class to manipulate KeePass credentials using KeePassHTTP protocol.
 type KeePassHTTP struct {
-	// Url is the listening keePassHTTP's server address.
+	// Url is the listening KeePassHTTP's server address.
 	Url string
 	// Storage is the file path to store private association key (default to "~/.python_keepass_http").
 	Storage string
@@ -69,9 +69,9 @@ type httpClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
-// New creates a keePassHTTP instance with default values
+// New creates a KeePassHTTP instance with default values
 func New() *KeePassHTTP {
-	kph := new(keePassHTTP)
+	kph := new(KeePassHTTP)
 
 	// replace mock fields
 	kph.httpClient = &http.Client{Timeout: time.Second * 30}
@@ -321,9 +321,9 @@ func (kph *KeePassHTTP) register() (uid string, dbHash string, err error) {
 
 func (kph *KeePassHTTP) registerValidate(data *body) (err error) {
 	if data.Id == "" {
-		err = fmt.Errorf("fail to associate with keePassHTTP, no app id returned")
+		err = fmt.Errorf("fail to associate with KeePassHTTP, no app id returned")
 	} else if data.Hash == "" {
-		err = fmt.Errorf("fail to associate with keePassHTTP, no app database hash returned")
+		err = fmt.Errorf("fail to associate with KeePassHTTP, no app database hash returned")
 	}
 	return
 }
@@ -404,7 +404,7 @@ func (kph *KeePassHTTP) requestSend(jsonRequestData []byte) (responseData *body,
 	}
 
 	if response.StatusCode != 200 {
-		err = fmt.Errorf("keePassHTTP returned an error (detail: %#v)", responseText)
+		err = fmt.Errorf("KeePassHTTP returned an error (detail: %#v)", responseText)
 		return
 	}
 
@@ -414,11 +414,11 @@ func (kph *KeePassHTTP) requestSend(jsonRequestData []byte) (responseData *body,
 
 func (kph *KeePassHTTP) responseValidate(responseData *body) (err error) {
 	if !responseData.Success {
-		return fmt.Errorf("keePassHTTP returned an error (detail: %#v)", responseData.Error)
+		return fmt.Errorf("KeePassHTTP returned an error (detail: %#v)", responseData.Error)
 	}
 
 	if responseData.Nonce == "" {
-		return fmt.Errorf("keePassHTTP does not have returned a Nonce")
+		return fmt.Errorf("KeePassHTTP does not have returned a Nonce")
 	}
 	responseIv, err := base64.StdEncoding.DecodeString(responseData.Nonce)
 	if err != nil {
@@ -426,7 +426,7 @@ func (kph *KeePassHTTP) responseValidate(responseData *body) (err error) {
 	}
 
 	if responseData.Verifier == "" {
-		return fmt.Errorf("keePassHTTP does not have returned a Verifier")
+		return fmt.Errorf("KeePassHTTP does not have returned a Verifier")
 	}
 	responseVerifier, err := base64.StdEncoding.DecodeString(responseData.Verifier)
 	if err != nil {
@@ -449,21 +449,21 @@ func (kph *KeePassHTTP) responseValidate(responseData *body) (err error) {
 	**/
 
 	if responseData.Nonce != string(signatureIv) {
-		return fmt.Errorf("keePassHTTP invalid signature")
+		return fmt.Errorf("KeePassHTTP invalid signature")
 	}
 
 	if responseData.Id == "" {
-		return fmt.Errorf("keePassHTTP does not have returned an appId")
+		return fmt.Errorf("KeePassHTTP does not have returned an appId")
 	}
 	if kph.uid != "" && kph.uid != responseData.Id {
-		return fmt.Errorf("keePassHTTP application id mismatch")
+		return fmt.Errorf("KeePassHTTP application id mismatch")
 	}
 
 	if responseData.Hash == "" {
-		return fmt.Errorf("keePassHTTP does not have returned a Hash")
+		return fmt.Errorf("KeePassHTTP does not have returned a Hash")
 	}
 	if kph.dbHash != "" && kph.dbHash != responseData.Hash {
-		return fmt.Errorf("keePassHTTP database id mismatch")
+		return fmt.Errorf("KeePassHTTP database id mismatch")
 	}
 
 	err = kph.decryptBody(aes, responseData)

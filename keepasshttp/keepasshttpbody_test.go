@@ -53,16 +53,16 @@ func TestKeePassHTTP_encryptBody(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			self := new(keePassHTTP)
+			self := new(KeePassHTTP)
 			err := self.encryptBody(tt.aes, tt.data)
 			if err != nil {
 				if !tt.wantErr {
-					t.Errorf("keePassHTTP.encryptBody() error = %v, wantErr %v", err, tt.wantErr)
+					t.Errorf("KeePassHTTP.encryptBody() error = %v, wantErr %v", err, tt.wantErr)
 				}
 				return
 			}
 			if !reflect.DeepEqual(tt.data, tt.wantEncryptedData) {
-				t.Errorf("keePassHTTP.encryptBody() = %v, want %v", tt.data, tt.wantEncryptedData)
+				t.Errorf("KeePassHTTP.encryptBody() = %v, want %v", tt.data, tt.wantEncryptedData)
 			}
 		})
 	}
@@ -122,16 +122,16 @@ func TestKeePassHTTP_decryptBody(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			self := new(keePassHTTP)
+			self := new(KeePassHTTP)
 			err := self.decryptBody(tt.aes, tt.data)
 			if err != nil {
 				if !tt.wantErr {
-					t.Errorf("keePassHTTP.decryptBody() error = %v, wantErr %v", err, tt.wantErr)
+					t.Errorf("KeePassHTTP.decryptBody() error = %v, wantErr %v", err, tt.wantErr)
 				}
 				return
 			}
 			if !reflect.DeepEqual(tt.data, tt.wantEncryptedData) {
-				t.Errorf("keePassHTTP.decryptBody() = %v, want %v", tt.data, tt.wantEncryptedData)
+				t.Errorf("KeePassHTTP.decryptBody() = %v, want %v", tt.data, tt.wantEncryptedData)
 			}
 		})
 	}

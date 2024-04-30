@@ -94,7 +94,7 @@ func TestKeePassHTTP_catchError(t *testing.T) {
 				panic(fmt.Errorf("controlled panic"))
 			}
 			if err := panicker(); (err != nil) != tt.wantErr {
-				t.Errorf("keePassHTTP.catchError() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("KeePassHTTP.catchError() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
@@ -117,7 +117,7 @@ func TestKeePassHTTP_List(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			gotCredentials, err := tt.self.List()
 			if (err != nil) != tt.wantErr {
-				t.Errorf("keePassHTTP.List() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("KeePassHTTP.List() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			var gotCredentialsUUID []string
@@ -125,7 +125,7 @@ func TestKeePassHTTP_List(t *testing.T) {
 				gotCredentialsUUID = append(gotCredentialsUUID, cred.Uuid)
 			}
 			if !reflect.DeepEqual(gotCredentialsUUID, tt.wantCredentials) {
-				t.Errorf("keePassHTTP.List() = %v, want %v", gotCredentials, tt.wantCredentials)
+				t.Errorf("KeePassHTTP.List() = %v, want %v", gotCredentials, tt.wantCredentials)
 			}
 		})
 	}
@@ -153,11 +153,11 @@ func TestKeePassHTTP_Count(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			gotCredentialsCount, err := tt.self.Count(tt.args.filter)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("keePassHTTP.Count() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("KeePassHTTP.Count() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if gotCredentialsCount != tt.wantCredentialsCount {
-				t.Errorf("keePassHTTP.Count() = %v, want %v", gotCredentialsCount, tt.wantCredentialsCount)
+				t.Errorf("KeePassHTTP.Count() = %v, want %v", gotCredentialsCount, tt.wantCredentialsCount)
 			}
 		})
 	}
@@ -185,7 +185,7 @@ func TestKeePassHTTP_Search(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			gotCredentials, err := tt.self.Search(tt.args.filter)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("keePassHTTP.Search() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("KeePassHTTP.Search() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			var gotCredentialsUUID []string
@@ -193,7 +193,7 @@ func TestKeePassHTTP_Search(t *testing.T) {
 				gotCredentialsUUID = append(gotCredentialsUUID, cred.Uuid)
 			}
 			if !reflect.DeepEqual(gotCredentialsUUID, tt.wantCredentials) {
-				t.Errorf("keePassHTTP.Search() = %v, want %v", gotCredentials, tt.wantCredentials)
+				t.Errorf("KeePassHTTP.Search() = %v, want %v", gotCredentials, tt.wantCredentials)
 			}
 		})
 	}
@@ -221,11 +221,11 @@ func TestKeePassHTTP_Get(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			gotCredential, err := tt.self.Get(tt.args.filter)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("keePassHTTP.Get() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("KeePassHTTP.Get() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if gotCredential == nil || gotCredential.Uuid != tt.wantCredential {
-				t.Errorf("keePassHTTP.Get() = %v, want %v", gotCredential, tt.wantCredential)
+				t.Errorf("KeePassHTTP.Get() = %v, want %v", gotCredential, tt.wantCredential)
 			}
 		})
 	}
@@ -285,7 +285,7 @@ func TestKeePassHTTP_Create(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if err := tt.self.Create(tt.args.credential); (err != nil) != tt.wantErr {
-				t.Errorf("keePassHTTP.Create() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("KeePassHTTP.Create() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
@@ -325,7 +325,7 @@ func TestKeePassHTTP_Update(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if err := tt.self.Update(tt.args.credential); (err != nil) != tt.wantErr {
-				t.Errorf("keePassHTTP.Update() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("KeePassHTTP.Update() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
@@ -371,7 +371,7 @@ func TestKeePassHTTP_load(t *testing.T) {
 		},
 		{
 			name: "should fail when setDefaults fails",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient:        new(httpClientMock),
 				mockErrorExpected: "user.Current",
 			},
@@ -379,7 +379,7 @@ func TestKeePassHTTP_load(t *testing.T) {
 		},
 		{
 			name: "should fail when randBytes fails",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient:        new(httpClientMock),
 				mockErrorExpected: "kph.randBytes",
 				randBytes: func(i int) ([]byte, error) {
@@ -392,7 +392,7 @@ func TestKeePassHTTP_load(t *testing.T) {
 		},
 		{
 			name: "should fail when kph.register fails",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient: new(httpClientMock),
 				randBytes:  new(aes256CBCPksc7).randBytes,
 			},
@@ -402,7 +402,7 @@ func TestKeePassHTTP_load(t *testing.T) {
 		},
 		{
 			name: "should fail when kph.registerValidate fails",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient:        new(httpClientMock),
 				mockErrorExpected: "kph.registerValidate",
 			},
@@ -411,7 +411,7 @@ func TestKeePassHTTP_load(t *testing.T) {
 		},
 		{
 			name: "should fail when os.OpenFile(create) fails",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient:        new(httpClientMock),
 				mockErrorExpected: "os.OpenFile",
 			},
@@ -420,7 +420,7 @@ func TestKeePassHTTP_load(t *testing.T) {
 		},
 		{
 			name: "should fail when os.OpenFile(read) fails",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient:        new(httpClientMock),
 				randBytes:         new(aes256CBCPksc7).randBytes,
 				mockErrorExpected: "os.OpenFile",
@@ -430,7 +430,7 @@ func TestKeePassHTTP_load(t *testing.T) {
 		},
 		{
 			name: "should fail when ioutil.ReadAll fails",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient:        new(httpClientMock),
 				randBytes:         new(aes256CBCPksc7).randBytes,
 				mockErrorExpected: "ioutil.ReadAll",
@@ -440,7 +440,7 @@ func TestKeePassHTTP_load(t *testing.T) {
 		},
 		{
 			name: "should fail when fd.WriteString fails",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient:        new(httpClientMock),
 				randBytes:         new(aes256CBCPksc7).randBytes,
 				mockErrorExpected: "fd.WriteString",
@@ -487,7 +487,7 @@ func TestKeePassHTTP_load(t *testing.T) {
 			}
 			err := tt.self.load()
 			if (err != nil) != tt.wantErr {
-				t.Errorf("keePassHTTP.load() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("KeePassHTTP.load() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
@@ -501,11 +501,11 @@ func TestKeePassHTTP_setDefaults(t *testing.T) {
 	}{
 		{
 			name: "should set default when nothing is present",
-			self: &keePassHTTP{httpClient: new(httpClientMock)},
+			self: &KeePassHTTP{httpClient: new(httpClientMock)},
 		},
 		{
 			name: "should raise an error when no user if found",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient:        new(httpClientMock),
 				mockErrorExpected: "user.Current",
 			},
@@ -516,7 +516,7 @@ func TestKeePassHTTP_setDefaults(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.self.setDefaults()
 			if (err != nil) != tt.wantErr {
-				t.Errorf("keePassHTTP.setDefaults() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("KeePassHTTP.setDefaults() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
@@ -534,13 +534,13 @@ func TestKeePassHTTP_requestSend(t *testing.T) {
 	}{
 		{
 			name:    "should raise an error when server answer with non 200",
-			self:    &keePassHTTP{httpClient: new(httpClientMock), Url: defaultServerUrl},
+			self:    &KeePassHTTP{httpClient: new(httpClientMock), Url: defaultServerUrl},
 			args:    args{[]byte(`{"RequestType": "associate"}`)},
 			wantErr: true,
 		},
 		{
 			name: "should raise an error when http.NewRequest fails",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient:        new(httpClientMock),
 				Url:               defaultServerUrl,
 				mockErrorExpected: "http.NewRequest",
@@ -550,7 +550,7 @@ func TestKeePassHTTP_requestSend(t *testing.T) {
 		},
 		{
 			name: "should raise an error when kph.httpClient.Do fails",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient:        new(httpClientMock),
 				Url:               defaultServerUrl,
 				mockErrorExpected: "kph.httpClient.Do",
@@ -560,7 +560,7 @@ func TestKeePassHTTP_requestSend(t *testing.T) {
 		},
 		{
 			name: "should raise an error when ioutil.ReadAll fails",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient:        new(httpClientMock),
 				Url:               defaultServerUrl,
 				mockErrorExpected: "ioutil.ReadAll",
@@ -573,7 +573,7 @@ func TestKeePassHTTP_requestSend(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.self.requestSend(tt.args.jsonRequestData)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("keePassHTTP.requestSend() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("KeePassHTTP.requestSend() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
@@ -611,7 +611,7 @@ func TestKeePassHTTP_registerValidate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.self.registerValidate(tt.args.data)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("keePassHTTP.registerValidate() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("KeePassHTTP.registerValidate() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
@@ -743,7 +743,7 @@ func TestKeePassHTTP_responseValidate(t *testing.T) {
 
 			err := kph.responseValidate(tt.args.responseData)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("keePassHTTP.responseValidate() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("KeePassHTTP.responseValidate() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
@@ -764,14 +764,14 @@ func TestKeePassHTTP_authenticate(t *testing.T) {
 		},
 		{
 			name: "should raise an error on unsuccessful load",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				mockErrorExpected: "user.Current",
 			},
 			wantErr: true,
 		},
 		{
 			name: "should raise an error on unsuccessful http request",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient:        &httpClientMock{},
 				randBytes:         new(aes256CBCPksc7).randBytes,
 				mockErrorExpected: "http.NewRequest",
@@ -780,7 +780,7 @@ func TestKeePassHTTP_authenticate(t *testing.T) {
 		},
 		{
 			name: "should raise an error on body encrypt failure",
-			self: &keePassHTTP{
+			self: &KeePassHTTP{
 				httpClient:        &httpClientMock{},
 				randBytes:         new(aes256CBCPksc7).randBytes,
 				mockErrorExpected: "kph.encryptBody",
@@ -795,7 +795,7 @@ func TestKeePassHTTP_authenticate(t *testing.T) {
 			}
 			err := tt.self.authenticate()
 			if (err != nil) != tt.wantErr {
-				t.Errorf("keePassHTTP.authenticate() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("KeePassHTTP.authenticate() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
