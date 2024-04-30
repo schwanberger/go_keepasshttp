@@ -14,7 +14,7 @@ import (
 	"testing"
 )
 
-func newKeePassHTTP() *keePassHTTP {
+func newKeePassHTTP() *KeePassHTTP {
 	storage := filepath.Join("..", "tests", "test_storage")
 	serverUrl := ""
 
@@ -78,7 +78,7 @@ func (c *httpClientMock) Do(req *http.Request) (*http.Response, error) {
 func TestKeePassHTTP_catchError(t *testing.T) {
 	tests := []struct {
 		name    string
-		self    *keePassHTTP
+		self    *KeePassHTTP
 		wantErr bool
 	}{
 		{
@@ -103,7 +103,7 @@ func TestKeePassHTTP_catchError(t *testing.T) {
 func TestKeePassHTTP_List(t *testing.T) {
 	tests := []struct {
 		name            string
-		self            *keePassHTTP
+		self            *KeePassHTTP
 		wantCredentials []string
 		wantErr         bool
 	}{
@@ -137,7 +137,7 @@ func TestKeePassHTTP_Count(t *testing.T) {
 	}
 	tests := []struct {
 		name                 string
-		self                 *keePassHTTP
+		self                 *KeePassHTTP
 		args                 args
 		wantCredentialsCount int
 		wantErr              bool
@@ -169,7 +169,7 @@ func TestKeePassHTTP_Search(t *testing.T) {
 	}
 	tests := []struct {
 		name            string
-		self            *keePassHTTP
+		self            *KeePassHTTP
 		args            args
 		wantCredentials []string
 		wantErr         bool
@@ -205,7 +205,7 @@ func TestKeePassHTTP_Get(t *testing.T) {
 	}
 	tests := []struct {
 		name           string
-		self           *keePassHTTP
+		self           *KeePassHTTP
 		args           args
 		wantCredential string
 		wantErr        bool
@@ -268,7 +268,7 @@ func TestKeePassHTTP_Create(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		self    *keePassHTTP
+		self    *KeePassHTTP
 		args    args
 		wantErr bool
 	}{
@@ -297,7 +297,7 @@ func TestKeePassHTTP_Update(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		self    *keePassHTTP
+		self    *KeePassHTTP
 		args    args
 		wantErr bool
 	}{
@@ -334,7 +334,7 @@ func TestKeePassHTTP_Update(t *testing.T) {
 func TestKeePassHTTP_load(t *testing.T) {
 	tests := []struct {
 		name          string
-		self          *keePassHTTP
+		self          *KeePassHTTP
 		freshStorage  bool
 		keepRandBytes bool
 		corruptLine   int
@@ -496,7 +496,7 @@ func TestKeePassHTTP_load(t *testing.T) {
 func TestKeePassHTTP_setDefaults(t *testing.T) {
 	tests := []struct {
 		name    string
-		self    *keePassHTTP
+		self    *KeePassHTTP
 		wantErr bool
 	}{
 		{
@@ -528,7 +528,7 @@ func TestKeePassHTTP_requestSend(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		self    *keePassHTTP
+		self    *KeePassHTTP
 		args    args
 		wantErr bool
 	}{
@@ -585,7 +585,7 @@ func TestKeePassHTTP_registerValidate(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		self    *keePassHTTP
+		self    *KeePassHTTP
 		args    args
 		wantErr bool
 	}{
@@ -623,7 +623,7 @@ func TestKeePassHTTP_responseValidate(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		self    *keePassHTTP
+		self    *KeePassHTTP
 		args    args
 		wantErr bool
 	}{
@@ -752,7 +752,7 @@ func TestKeePassHTTP_responseValidate(t *testing.T) {
 func TestKeePassHTTP_authenticate(t *testing.T) {
 	tests := []struct {
 		name    string
-		self    *keePassHTTP
+		self    *KeePassHTTP
 		key     []byte
 		wantErr bool
 	}{
@@ -808,7 +808,7 @@ func TestKeePassHTTP_getCredentials(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		self    *keePassHTTP
+		self    *KeePassHTTP
 		args    args
 		wantErr bool
 	}{

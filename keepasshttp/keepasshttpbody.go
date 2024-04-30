@@ -73,12 +73,12 @@ func (aes256 *aes256CBCPksc7) decryptBase64String(cipherText string) (string, er
 	return clearText, nil
 }
 
-func (kph *keePassHTTP) encryptBody(aes *aes256CBCPksc7, data *body) (err error) {
+func (kph *KeePassHTTP) encryptBody(aes *aes256CBCPksc7, data *body) (err error) {
 	err = applyToTag(reflect.ValueOf(data), "encrypted", aes.encryptBase64String)
 	return
 }
 
-func (kph *keePassHTTP) decryptBody(aes *aes256CBCPksc7, data *body) (err error) {
+func (kph *KeePassHTTP) decryptBody(aes *aes256CBCPksc7, data *body) (err error) {
 	err = applyToTag(reflect.ValueOf(data), "encrypted", aes.decryptBase64String)
 	return
 }

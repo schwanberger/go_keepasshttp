@@ -26,7 +26,7 @@ type Credential struct {
 	Uuid         string
 	StringFields map[string]string
 
-	kph *keePassHTTP
+	kph *KeePassHTTP
 }
 
 // Commit update an existing entry in KeePass database.
@@ -47,8 +47,8 @@ type Filter struct {
 	Realm     string
 }
 
-// keePassHTTP is a class to manipulate KeePass credentials using keePassHTTP protocol.
-type keePassHTTP struct {
+// KeePassHTTP is a class to manipulate KeePass credentials using keePassHTTP protocol.
+type KeePassHTTP struct {
 	// Url is the listening keePassHTTP's server address.
 	Url string
 	// Storage is the file path to store private association key (default to "~/.python_keepass_http").
@@ -70,7 +70,7 @@ type httpClient interface {
 }
 
 // New creates a keePassHTTP instance with default values
-func New() *keePassHTTP {
+func New() *KeePassHTTP {
 	kph := new(keePassHTTP)
 
 	// replace mock fields
@@ -82,7 +82,7 @@ func New() *keePassHTTP {
 
 // List all entries that look like an url.
 // Passwords are omitted.
-func (kph *keePassHTTP) List() (credentials []*Credential, err error) {
+func (kph *KeePassHTTP) List() (credentials []*Credential, err error) {
 	result, err := kph.request(&body{
 		RequestType: "get-all-logins",
 	})
@@ -94,7 +94,7 @@ func (kph *keePassHTTP) List() (credentials []*Credential, err error) {
 
 // Count entries for a given `Filter`.
 // Filtering is done the same as `Search` method.
-func (kph *keePassHTTP) Count(filter *Filter) (credentialsCount int, err error) {
+func (kph *KeePassHTTP) Count(filter *Filter) (credentialsCount int, err error) {
 	result, err := kph.request(&body{
 		RequestType: "get-logins-count",
 		Url:         filter.Url,
@@ -112,7 +112,7 @@ func (kph *keePassHTTP) Count(filter *Filter) (credentialsCount int, err error) 
 // For every entry, the Levenshtein Distance of his Entry-URL (or Title, if Entry-URL is not set)
 // to the `Url` is calculated.
 // Only the entries with the minimal distance are returned.
-func (kph *keePassHTTP) Search(filter *Filter) (credentials []*Credential, err error) {
+func (kph *KeePassHTTP) Search(filter *Filter) (credentials []*Credential, err error) {
 	result, err := kph.request(&body{
 		RequestType: "get-logins",
 		Url:         filter.Url,
@@ -129,7 +129,7 @@ func (kph *keePassHTTP) Search(filter *Filter) (credentials []*Credential, err e
 // For every entry, the Levenshtein Distance of his Entry-URL (or Title, if Entry-URL is not set)
 // to the ``key`` is calculated.
 // Only the entry with the minimal distance is returned
-func (kph *keePassHTTP) Get(filter *Filter) (credential *Credential, err error) {
+func (kph *KeePassHTTP) Get(filter *Filter) (credential *Credential, err error) {
 	credentials, err := kph.Search(filter)
 	if err == nil && len(credentials) > 0 {
 		credential = credentials[0]
@@ -138,7 +138,7 @@ func (kph *keePassHTTP) Get(filter *Filter) (credential *Credential, err error) 
 }
 
 // Create a new credential into KeePass
-func (kph *keePassHTTP) Create(credential *Credential) (err error) {
+func (kph *KeePassHTTP) Create(credential *Credential) (err error) {
 	_, err = kph.request(&body{
 		RequestType: "set-login",
 		Url:         credential.Url,
@@ -152,7 +152,7 @@ func (kph *keePassHTTP) Create(credential *Credential) (err error) {
 
 // Update a credential into KeePass.
 // KeePass will prompt for validation only when a change is detected.
-func (kph *keePassHTTP) Update(credential *Credential) (err error) {
+func (kph *KeePassHTTP) Update(credential *Credential) (err error) {
 	if credential.Uuid == "" {
 		return fmt.Errorf("cannot update a credential without its uuid")
 	}
@@ -166,7 +166,7 @@ func (kph *keePassHTTP) Update(credential *Credential) (err error) {
 	return
 }
 
-func (kph *keePassHTTP) mockError(currentError string, err *error) (raiseError bool) {
+func (kph *KeePassHTTP) mockError(currentError string, err *error) (raiseError bool) {
 	// used for mocking error that are difficult to trigger or test
 	// it always returns false unless a specific error is manually set to be raised
 	if currentError != kph.mockErrorExpected {
@@ -176,7 +176,7 @@ func (kph *keePassHTTP) mockError(currentError string, err *error) (raiseError b
 	return true
 }
 
-func (kph *keePassHTTP) getCredentials(result *body, credentials *[]*Credential) {
+func (kph *KeePassHTTP) getCredentials(result *body, credentials *[]*Credential) {
 	if result == nil {
 		return
 	}
@@ -195,7 +195,7 @@ func (kph *keePassHTTP) getCredentials(result *body, credentials *[]*Credential)
 	}
 }
 
-func (kph *keePassHTTP) setDefaults() (err error) {
+func (kph *KeePassHTTP) setDefaults() (err error) {
 	if kph.Storage == "" {
 		var usr *user.User
 		usr, err = user.Current()
@@ -210,7 +210,7 @@ func (kph *keePassHTTP) setDefaults() (err error) {
 	return
 }
 
-func (kph *keePassHTTP) loadCreate() (err error) {
+func (kph *KeePassHTTP) loadCreate() (err error) {
 	kph.key, err = kph.randBytes(32)
 	if err != nil {
 		return
@@ -239,7 +239,7 @@ func (kph *keePassHTTP) loadCreate() (err error) {
 	return
 }
 
-func (kph *keePassHTTP) loadOpen() (err error) {
+func (kph *KeePassHTTP) loadOpen() (err error) {
 	var fd *os.File
 	fd, err = os.OpenFile(kph.Storage, os.O_RDONLY, 0600)
 	if err != nil || kph.mockError("os.OpenFile", &err) {
@@ -279,7 +279,7 @@ func (kph *keePassHTTP) loadOpen() (err error) {
 	return
 }
 
-func (kph *keePassHTTP) load() (err error) {
+func (kph *KeePassHTTP) load() (err error) {
 	err = kph.setDefaults()
 	if err != nil {
 		return
@@ -302,7 +302,7 @@ func (kph *keePassHTTP) load() (err error) {
 	return err
 }
 
-func (kph *keePassHTTP) register() (uid string, dbHash string, err error) {
+func (kph *KeePassHTTP) register() (uid string, dbHash string, err error) {
 	data, err := kph.request(&body{
 		RequestType: "associate",
 		Key:         base64.StdEncoding.EncodeToString(kph.key),
@@ -319,7 +319,7 @@ func (kph *keePassHTTP) register() (uid string, dbHash string, err error) {
 	return
 }
 
-func (kph *keePassHTTP) registerValidate(data *body) (err error) {
+func (kph *KeePassHTTP) registerValidate(data *body) (err error) {
 	if data.Id == "" {
 		err = fmt.Errorf("fail to associate with keePassHTTP, no app id returned")
 	} else if data.Hash == "" {
@@ -328,7 +328,7 @@ func (kph *keePassHTTP) registerValidate(data *body) (err error) {
 	return
 }
 
-func (kph *keePassHTTP) authenticate() (err error) {
+func (kph *KeePassHTTP) authenticate() (err error) {
 	_, err = kph.request(&body{
 		RequestType:   "test-associate",
 		TriggerUnlock: true,
@@ -345,7 +345,7 @@ func (kph *keePassHTTP) authenticate() (err error) {
 	return
 }
 
-func (kph *keePassHTTP) request(requestData *body) (responseData *body, err error) {
+func (kph *KeePassHTTP) request(requestData *body) (responseData *body, err error) {
 	if kph.key == nil {
 		err = kph.load()
 		if err != nil {
@@ -365,7 +365,7 @@ func (kph *keePassHTTP) request(requestData *body) (responseData *body, err erro
 	return
 }
 
-func (kph *keePassHTTP) requestPrepare(requestData *body) (jsonRequestData []byte, err error) {
+func (kph *KeePassHTTP) requestPrepare(requestData *body) (jsonRequestData []byte, err error) {
 	aes, err := NewAES256CBCPksc7(kph.key, nil)
 	if err != nil {
 		return
@@ -385,7 +385,7 @@ func (kph *keePassHTTP) requestPrepare(requestData *body) (jsonRequestData []byt
 	return
 }
 
-func (kph *keePassHTTP) requestSend(jsonRequestData []byte) (responseData *body, err error) {
+func (kph *KeePassHTTP) requestSend(jsonRequestData []byte) (responseData *body, err error) {
 	httpRequest, err := http.NewRequest("POST", kph.Url, bytes.NewBuffer(jsonRequestData))
 	if err != nil || kph.mockError("http.NewRequest", &err) {
 		return
@@ -412,7 +412,7 @@ func (kph *keePassHTTP) requestSend(jsonRequestData []byte) (responseData *body,
 	return
 }
 
-func (kph *keePassHTTP) responseValidate(responseData *body) (err error) {
+func (kph *KeePassHTTP) responseValidate(responseData *body) (err error) {
 	if !responseData.Success {
 		return fmt.Errorf("keePassHTTP returned an error (detail: %#v)", responseData.Error)
 	}
